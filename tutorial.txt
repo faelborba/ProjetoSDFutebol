@@ -1,0 +1,5 @@
+Baixe a biblioteca sqlite4java e instale em seu projeto
+https://bitbucket.org/almworks/sqlite4java
+Baixe a biblioteca Gson e instale em seu projeto
+
+

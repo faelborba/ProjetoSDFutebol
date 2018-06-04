@@ -1,0 +1,8 @@
+package Conexoes;
+
+import java.sql.Connection;
+
+public class ConexaoSQLite {
+	private Connection  conexao;
+	
+}

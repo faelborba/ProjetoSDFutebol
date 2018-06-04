@@ -1,0 +1,62 @@
+package Servidor;
+
+import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.*;
+
+import com.almworks.sqlite4java.SQLiteConnection;
+import com.almworks.sqlite4java.SQLiteException;
+import com.almworks.sqlite4java.SQLiteStatement;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+public class TrataProtocolo extends Thread implements Serializable {
+	// variáveis do server
+	private Socket socket;
+	private Scanner entrada;
+	private PrintWriter saida;
+
+	// preparando entrada e saída do server
+	public TrataProtocolo(Socket socket) throws IOException {
+		this.socket = socket;
+		this.entrada = new Scanner(this.socket.getInputStream());
+		this.saida = new PrintWriter(this.socket.getOutputStream());
+	}
+
+	@Override
+	public void run() {
+		String protocolo = null;
+		protocolo = entrada.nextLine();
+		System.out.println("Protocolo recebido: " + protocolo);
+		
+		SQLiteConnection conn = null;
+		SQLiteStatement stmt = null;
+		String SQL = "SELECT * FROM country";	
+		String formato = "%s\t\t|%s\t\n";
+		try {
+			conn = createConnection();
+			stmt = conn.prepare(SQL);
+			
+			System.out.printf(formato, stmt.getColumnName(0).toUpperCase(),
+			          stmt.getColumnName(1).toUpperCase());
+			       formato = "%s\t|%s\t\n";
+			       while (stmt.step()) {
+			          System.out.printf(formato, stmt.columnString(0), stmt.columnString(1));
+			       }	
+		} catch (SQLiteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.entrada.close();
+		this.saida.close();
+	}
+
+	private SQLiteConnection createConnection() throws SQLiteException{
+		      SQLiteConnection conn = null;
+		      conn = new SQLiteConnection(new File("pessoas.db"));
+		      conn.open();
+		      return conn;
+	}
+}
