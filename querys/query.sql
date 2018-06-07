@@ -1,6 +1,6 @@
 --querys Para o trabalho
 --Requisição /getAvailabeYears
-SELECT strftime('%Y', date) as year
+SELECT distinct strftime('%Y', date) as year
 FROM match
 where strftime('%Y', date) >= '2009' and strftime('%Y', date) <= '2011'--onde tem os números dos anos substitua por váriavel
 order by date;
@@ -8,7 +8,7 @@ order by date;
 
 --Requisição /getData/2010?playerName=Lionel+Messi
 --home
-select pl.player_api_id, pl.player_name, (ma.home_team_goal - ma.away_team_goal) as resultado
+select pl.player_api_id as IdPartidaJogador, ma.match_api_id as FkIDPartidaTime, pl.player_name as Nomejogador, (ma.home_team_goal - ma.away_team_goal) as ResultadoJogador, strftime('%Y', ma.date) as DataJogoJogador
 from player pl
 inner join match ma
     on ma.home_player_1 = pl.player_api_id
@@ -23,9 +23,10 @@ inner join match ma
     or ma.home_player_10 = pl.player_api_id
     or ma.home_player_11 = pl.player_api_id
 where upper(pl.player_name) like upper('%Lionel Messi%')--onde tem o nome do jogador substitua por váriavel
-    and strftime('%Y', ma.date) = '2010';--onde tem os números dos anos substitua por váriavel
+    and strftime('%Y', ma.date) = '2010'--onde tem os números dos anos substitua por váriavel
 --away
-select pl.player_api_id, pl.player_name, (ma.away_team_goal - ma.home_team_goal) as resultado
+union all
+select pl.player_api_id as IdPartidaJogador, ma.match_api_id as FkIDPartidaTime, pl.player_name as Nomejogador, (ma.away_team_goal - ma.home_team_goal) as ResultadoJogador, strftime('%Y', ma.date) as DataJogoJogador
 from player pl
 inner join match ma
     on ma.away_player_1 = pl.player_api_id
@@ -80,8 +81,9 @@ inner join team t
     on ma.home_team_api_id = t.team_api_id
 where upper(pl.player_name) like upper('%Neymar%')--onde tem o nome do jogador substitua por váriavel
     and upper(t.team_long_name) like upper('%Barcelona%')--onde tem o nome do time substitua por váriavel
-    and strftime('%Y', ma.date) = '2015';--onde tem os números dos anos substitua por váriavel
+    and strftime('%Y', ma.date) = '2015'--onde tem os números dos anos substitua por váriavel
 --away
+union
 select pl.player_api_id, pl.player_name, (ma.away_team_goal - ma.home_team_goal) as resultado
 from player pl
 inner join match ma
@@ -101,3 +103,11 @@ inner join team t
     where upper(pl.player_name) like upper('%Neymar%')--onde tem o nome do jogador substitua por váriavel
     and upper(t.team_long_name) like upper('%Barcelona%')--onde tem o nome do time substitua por váriavel
     and strftime('%Y', ma.date) = '2015';--onde tem os números dos anos substitua por váriavel
+
+
+
+
+
+
+
+
