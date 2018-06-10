@@ -1,0 +1,16 @@
+package ConexaoMysql;
+
+import javax.swing.JOptionPane;
+
+public class Projeto {
+	public static void main(String[]args) {
+		FabricaConexao fabrica = new FabricaConexao();
+		JOptionPane.showMessageDialog(null, "Vou solicatar Abertura da base de dados");
+		if(fabrica.abrirBanco()) {
+			JOptionPane.showMessageDialog(null, "Base de dados pronta");
+		}else {
+			JOptionPane.showMessageDialog(null, "BASE de dados não está pronta");
+		}
+	}
+	
+}

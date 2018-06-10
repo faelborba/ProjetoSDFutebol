@@ -1,0 +1,168 @@
+package teste;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
+ 
+public class Cliente {
+ 
+    private int idCliente;
+    private String nome;
+    private String fone;
+ 
+    public Cliente(){
+ 
+    }
+ 
+    public Cliente(int idCliente) {
+        this.idCliente = idCliente;
+    }
+ 
+    public Cliente(String nome, String fone) {
+        this.nome = nome;
+        this.fone = fone;
+    }
+ 
+    public int getIdCliente() {
+        return idCliente;
+    }
+ 
+    public void setIdCliente (int idCliente) {
+        this.idCliente = idCliente;
+    }
+ 
+    public String getNome() {
+        return nome;
+    }
+ 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+ 
+    public String getFone() {
+        return fone;
+    }
+ 
+    public void setFone(String fone) {
+        this.fone = fone;
+    }
+ 
+    //  Inclusao de clientes
+    public void incluir(Connection conn) {
+ 
+        //Armazena a string contento o comando sql numa variavel.
+        //Repare nos pontos de interrogação, pois eles serão preenchidos!
+ 
+        String sqlInsert = "INSERT INTO cliente(nome, fone) VALUES ( ?, ?)";
+ 
+        //inicio um objeto que prepara a instrução a ser executada.
+         //Veja o 'null'.Ele ainda está vazio
+ 
+        PreparedStatement stm = null;
+        try {
+ 
+                //Agora sim. Atraves do objeto Connection eu
+                //recupero o objeto 'preparador de instrução'.
+                //veja que já inseri a variavel que tem o comando sql!
+ 
+            stm = conn.prepareStatement(sqlInsert);
+ 
+             //Lembra dos pontos de interrogação, no seu comando sql?
+             //o método setString seta estes pontos de interrogação.
+             //substituindo-os pelo valor que vem no segundo parâmetro.
+             //Portanto...
+ 
+            //Aqui, substitui a primeira interrogação pelo nome do cliente
+            stm.setString(1, getNome());
+ 
+            //Aqui, substitui a segunda interrogação pelo fone (telefone) do cliente
+            stm.setString(2, getFone());
+ 
+            //E finalmente depois de tudo devidamente preparado ele chama
+            // o comando execute()
+            stm.execute();
+ 
+        } catch (Exception e) {
+            //Caso tenha uma exceção printa na tela
+            e.printStackTrace();
+                try {
+                    //Aqui ele 'tenta' retroceder, na ação que deu errado.
+                    // quese um Ctrl+Z da vida.
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    System.out.print(e1.getStackTrace());
+                }
+        } finally {
+            // Comando finally sempre é executado
+            if (stm != null) {
+                try {
+                    // Encerra as operações.
+                    stm.close();
+                } catch (SQLException e1) {
+                    System.out.print(e1.getStackTrace());
+                }
+            }
+        }
+    }
+ 
+    public void buscar(Connection conn) {
+ 
+        String sqlSelect = "SELECT nome, fone FROM cliente WHERE cliente.id = ?";
+ 
+        PreparedStatement stm = null;
+ 
+          // Aqui temos uma nova estrela no pauco.
+          // O objeto ResultSet é responsavel por manipular
+          // os resultados de uma query de busca.
+ 
+        ResultSet rs = null;
+ 
+        try {
+            //vide explicaçao anterior
+            stm = conn.prepareStatement(sqlSelect);
+ 
+            //ponto de interrogação por valor getIdCliente()
+            stm.setInt(1, getIdCliente());
+ 
+            //O comando abaixo retorna um objeto ResultSet
+            //com os valores dos dados buscados.
+ 
+            rs = stm.executeQuery();
+ 
+            //use next() para verificar se ele veio preenchido
+            //de dados. Ele também pode ser usado em um while,
+            //para querys que resultem em mais de um registro.
+ 
+            if (rs.next()){
+ 
+                //Acima no nosso select foi declarado:
+                //SELECT nome, fone FROM..
+                //portanto o 1 = nome e o
+                //2 = fone
+ 
+                //getString(1) refere-se ao atributo 'nome' da nossa query
+                this.setNome(rs.getString(1));
+ 
+                //Já o getString(2) refere-se ao atributo 'fone'
+                this.setFone(rs.getString(2));
+            }
+ 
+        } catch (Exception e) {
+            e.printStackTrace();
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    System.out.print(e1.getStackTrace());
+                }
+        } finally {
+            if (stm != null) {
+                try {
+                    stm.close();
+                } catch (SQLException e1) {
+                    System.out.print(e1.getStackTrace());
+                }
+            }
+        }
+    }
+}

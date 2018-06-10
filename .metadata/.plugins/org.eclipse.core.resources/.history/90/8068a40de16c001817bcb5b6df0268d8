@@ -1,0 +1,21 @@
+package ConexaoMysql;
+
+public class Projeto {
+	public static void main(String[]args) {
+		FabricaConexao fabrica = new FabricaConexao();
+		System.out.println( "Vou solicatar Abertura da base de dados");
+		if(fabrica.abrirBanco()) {
+			System.out.println( "Base de dados pronta");
+		}else {
+			System.out.println("BASE de dados não está pronta");
+		}
+		
+		if(fabrica.fecharBanco()) {
+			System.out.println("Base Fechada!");
+		}else {
+			System.out.println("Não é possível fechar o banco!");
+		}
+		
+	}
+	
+}

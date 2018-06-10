@@ -1,0 +1,6 @@
+package TesteMysql;
+
+public class FabricaConexao {
+	Connection con;
+	
+}

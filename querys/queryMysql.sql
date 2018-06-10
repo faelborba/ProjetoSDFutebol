@@ -1,8 +1,9 @@
 --querys Para o trabalho
 --Requisição /getAvailabeYears
-SELECT DISTINCT year(date)
+SELECT DISTINCT year(date) as year
 FROM `Match`
-where year(date) >= '2009' and year(date) <='2011';
+where year(date) >= '2009' and year(date) <='2011'
+order by date;
 
 
 --Requisição /getData/2010?playerName=Lionel+Messi
@@ -23,7 +24,6 @@ INNER JOIN `Match`
     or `Match`.`home_player_11` = `Player`.`player_api_id`
 where `Player`.`player_name` LIKE ('%Lionel Messi%')
     and year(`Match`.`date`) = '2010'
---away
 union all
 SELECT year(`Match`.`date`), `Player`.`player_name`, (`Match`.`away_team_goal` - `Match`.`home_team_goal`) as resultado
 FROM `Player`
@@ -57,12 +57,12 @@ from `Team`
 inner join `Match`
     on `Match`.`away_team_api_id` = `Team`.`team_api_id`
 where upper(`Team`.`team_long_name`) like upper('%Real Madrid%')
-    and year(`Match`.`date`) = '2010'
+    and year(`Match`.`date`) = '2010';
 
 
 --Requisição /getData/2010?clubName=Barcelona&playerName=Neymar+Jr
 --home
-SELECT year(`Match`.`date`), `Player`.`player_name`, `Team`.`team_long_name`,(`Match`.`home_team_goal` - `Match`.`away_team_goal`) as resultado
+SELECT year(`Match`.`date`) as ano, `Player`.`player_name` as jogador, `Team`.`team_long_name` as time,(`Match`.`home_team_goal` - `Match`.`away_team_goal`) as resultado
 FROM `Player`
 INNER JOIN `Match`
     on `Match`.`home_player_1` = `Player`.`player_api_id`
@@ -82,7 +82,7 @@ where `Player`.`player_name` LIKE ('%Neymar%')
     and upper(`Team`.`team_long_name`) like upper('%Barcelona%')
     and year(`Match`.`date`) = '2015'
 union all
-SELECT year(`Match`.`date`), `Player`.`player_name`, `Team`.`team_long_name`,(`Match`.`away_team_goal` - `Match`.`home_team_goal`) as resultado
+SELECT year(`Match`.`date`) as ano, `Player`.`player_name` as jogador, `Team`.`team_long_name` as time,(`Match`.`away_team_goal` - `Match`.`home_team_goal`) as resultado
 FROM `Player`
 INNER JOIN `Match`
     on `Match`.`away_player_1` = `Player`.`player_api_id`

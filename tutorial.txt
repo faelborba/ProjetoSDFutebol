@@ -1,5 +1,36 @@
-Baixe a biblioteca sqlite4java e instale em seu projeto
-https://bitbucket.org/almworks/sqlite4java
-Baixe a biblioteca Gson e instale em seu projeto
+Usamos banco de dados Mysql/MariaDB.
+Instale o ervidor mysql ou mariaDB em sua máquina
+Eu utilizei os passos abaixo para ubuntu
 
+Abra o terminal e digite:
+sudo apt-get install mariadb-server
 
+Para iniciar o servidor mysql use o comando:
+sudo service mysql start
+
+No terminal digite:
+mysql -u root
+
+Caso apresente erro de acesso negado digite:
+sudo mysql -u root
+Digite a senha adm de sua máquina e rode os comandos abaixo, na sequência:
+>use mysql;
+>update user set plugin=' ' where User='root';
+>flush privileges;
+>exit;
+
+Após teste a conexaõ novamente com o comando:
+mysql -u root.
+Digitando esse comando você deve entrar no mysql diretamente sem digitar senha.
+Isso foi feito para liberar o acesso das aplicãções diretamente ao mysql.
+
+Agora acesse o endereço https://github.com/faelborba/ProjetoSDFutebol/blob/master/ProjetoSDFutebol/db/TrabalhoG2.sql
+Baixe o arquivo do banco de dados que esta com o nome TrabalhoG2.sql
+
+Volte ao seu terminal e acesse o mysql novamente.
+Após acessar o mysql você deve criar e importar a base de dados.
+Rode os comando abaixo no terminal (acessa mysql, cria DB, sair, importa o conteudo do banco):
+mysql -u root
+>create database TrabalhoG2;
+>exit;
+mysql -u root -p TrabalhoG2 < <Caminho completo do arquivo/arquivo.sql>

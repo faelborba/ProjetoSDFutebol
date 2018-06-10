@@ -10,7 +10,8 @@ import java.sql.Statement;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import Conexoes.ConexaoSQLite;
+import ConexaoMysql.ConexaoMySQL;
+
 
 
 public class TrataProtocolo extends Thread implements Serializable {
@@ -29,21 +30,25 @@ public class TrataProtocolo extends Thread implements Serializable {
 	@Override
 	public void run() {
 		String protocolo = null;
-		ConexaoSQLite conexaoSQLite = new ConexaoSQLite();
 		ResultSet resultSet = null;
 		Statement statement = null;
 		
 		protocolo = entrada.nextLine();
 		System.out.println("Protocolo recebido: " + protocolo);
 		
-		conexaoSQLite.conectar();
-		System.out.println("Conectou ao banco SQLite.");
+		ConexaoMySQL.getConexaoMySQL();;
+		System.out.println(ConexaoMySQL.statusConection());
 		
-		String query = "SELECT strftime('%Y', date) as year\n" + 
-				"FROM match\n" + 
-				"where strftime('%Y', date) >= '2009' and strftime('%Y', date) <= '2011'" + 
+		String query = "SELECT DISTINCT year(date) as year\n" + 
+				"FROM `Match`\n" + 
+				"where year(date) >= '2009' and year(date) <='2011'"+
 				"order by date;";
-		statement = conexaoSQLite.criarStatement();
+		try {
+			statement = ConexaoMySQL.getConexaoMySQL().createStatement();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
@@ -58,7 +63,7 @@ public class TrataProtocolo extends Thread implements Serializable {
 			try {
 				resultSet.close();
 				statement.close();
-				conexaoSQLite.desconectar();
+				ConexaoMySQL.FecharConexao();
 			}catch(SQLException e) {
 				System.out.println("Erro de fechamento de database");
 			}

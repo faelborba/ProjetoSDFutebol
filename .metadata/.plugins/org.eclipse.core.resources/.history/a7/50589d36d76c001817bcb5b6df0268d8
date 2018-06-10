@@ -1,0 +1,16 @@
+package TesteMysql;
+
+import java.sql.Connection;
+
+import com.mysql.jdbc.*;
+
+public class FabricaConexao {
+	Connection con;
+	public boolean abriBanco() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}catch() {
+			return false;
+		}
+	}
+}
