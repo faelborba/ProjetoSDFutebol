@@ -8,6 +8,11 @@
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="local"/>
+			<item value="arquivo"/>
+			<item value="8000"/>
+			<item value="getData"/>
+			<item value="Invalid"/>
 			<item value="porta"/>
 			<item value="main"/>
 		</list>
@@ -18,7 +23,7 @@
 		<item value="338" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="439" key="DIALOG_HEIGHT"/>
-		<item value="764" key="DIALOG_X_ORIGIN"/>
-		<item value="250" key="DIALOG_Y_ORIGIN"/>
+		<item value="1437" key="DIALOG_X_ORIGIN"/>
+		<item value="267" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

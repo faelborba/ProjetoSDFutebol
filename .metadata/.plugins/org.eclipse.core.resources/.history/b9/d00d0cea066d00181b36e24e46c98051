@@ -1,0 +1,12 @@
+package servidorHttp;
+
+import java.util.ArrayList;
+
+public class config {
+	String serverName = null;
+	String serverIP = null;
+	int portListen = 0;
+	String memcachedServer = null;
+	int memcachedPort = 0;
+	private ArrayList<Integer> yearData = null;
+}

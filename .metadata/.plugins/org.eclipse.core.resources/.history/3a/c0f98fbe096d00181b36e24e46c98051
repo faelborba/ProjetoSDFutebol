@@ -1,0 +1,23 @@
+package servidorHttp;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+
+import com.sun.net.httpserver.HttpServer;
+
+
+public class SimpleHttpServer {
+
+	public static void main(String[] args) throws IOException {
+		File arquivo = null;
+		
+		arquivo = new File("config/config.json");// fazendo um objeto arquivo
+		
+		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+		server.createContext("/getAvailabeYears", new RequestHandler());
+		server.createContext("/getData", new RequestHandler());
+		server.setExecutor(null);
+		server.start();
+	}
+}

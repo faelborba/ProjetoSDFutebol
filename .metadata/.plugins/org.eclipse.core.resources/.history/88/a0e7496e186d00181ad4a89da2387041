@@ -1,0 +1,6 @@
+package servidorHttp;
+
+public class Erro {
+	public int errorCode = 0;
+	public String errorDescription = null;
+}
