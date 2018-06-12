@@ -22,7 +22,7 @@ public class SimpleHttpServer {
 			System.out.println("Server http: Arquivo de configuração inexistente");
 			Erro erro = new Erro();
 			erro.setErrorCode(417);
-			erro.setErrorDescription("Arquivo de configuração do servidor inexistente");
+			erro.setErrorDescription("Arquivo de configuração inexistente");
 			String json = gson.toJson(erro);
 			System.out.println(json);		
 		} else {

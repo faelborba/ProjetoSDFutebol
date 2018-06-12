@@ -28,11 +28,11 @@ public class Response {
 	
 	@Override
 	public String toString() {
-		GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
+		GsonBuilder builder = new GsonBuilder();
 		if(wins == 0 && losses == 0) {
 			Erro erro = new Erro();
-			erro.setErrorCode(2);
-			erro.setErrorDescription("Dados Inexistentes");
+			erro.setErrorCode(417);
+			erro.setErrorDescription("Arquivo de configuração inexistente");
 			Gson gson = builder.create();
 			return gson.toJson(erro);
 		}
