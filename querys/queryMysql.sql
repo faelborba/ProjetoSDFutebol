@@ -22,7 +22,7 @@ INNER JOIN `Match`
     or `Match`.`home_player_9` = `Player`.`player_api_id`
     or `Match`.`home_player_10` = `Player`.`player_api_id`
     or `Match`.`home_player_11` = `Player`.`player_api_id`
-where `Player`.`player_name` LIKE ('%Lionel Messi%')
+where upper(`Player`.`player_name`) = upper('Lionel Messi')
     and year(`Match`.`date`) = '2010'
     and (`Match`.`home_team_goal` - `Match`.`away_team_goal`) <> 0
 union all
@@ -40,7 +40,7 @@ INNER JOIN `Match`
     or `Match`.`away_player_9` = `Player`.`player_api_id`
     or `Match`.`away_player_10` = `Player`.`player_api_id`
     or `Match`.`away_player_11` = `Player`.`player_api_id`
-where `Player`.`player_name` LIKE ('%Lionel Messi%')
+where upper(`Player`.`player_name`) = upper('Lionel Messi')
     and year(`Match`.`date`) = '2010'
     and (`Match`.`away_team_goal` - `Match`.`home_team_goal`) <> 0;
 
@@ -51,7 +51,7 @@ select (`Match`.`home_team_goal` - `Match`.`away_team_goal`) as resultado
 from `Team`
 inner join `Match`
     on `Match`.`home_team_api_id` = `Team`.`team_api_id`
-where upper(`Team`.`team_long_name`) like upper('%Real Madrid%')
+where upper(`Team`.`team_long_name`) = upper('Real Madrid CF')
     and year(`Match`.`date`) = '2010'
     and (`Match`.`home_team_goal` - `Match`.`away_team_goal`) <> 0
 union all
@@ -59,7 +59,7 @@ select (`Match`.`away_team_goal` - `Match`.`home_team_goal`) as resultado
 from `Team`
 inner join `Match`
     on `Match`.`away_team_api_id` = `Team`.`team_api_id`
-where upper(`Team`.`team_long_name`) like upper('%Real Madrid%')
+where upper(`Team`.`team_long_name`) = upper('Real Madrid CF')
     and year(`Match`.`date`) = '2010'
     and (`Match`.`away_team_goal` - `Match`.`home_team_goal`) <> 0;
 
@@ -82,8 +82,8 @@ INNER JOIN `Match`
     or `Match`.`home_player_11` = `Player`.`player_api_id`
 INNER JOIN `Team`
     on `Match`.`home_team_api_id` = `Team`.`team_api_id`
-where `Player`.`player_name` LIKE ('%Neymar%')
-    and upper(`Team`.`team_long_name`) like upper('%Barcelona%')
+where `Player`.`player_name` = ('Neymar')
+    and upper(`Team`.`team_long_name`) = upper('FC Barcelona')
     and year(`Match`.`date`) = '2015'
     and (`Match`.`home_team_goal` - `Match`.`away_team_goal`) <> 0
 union all
@@ -103,7 +103,7 @@ INNER JOIN `Match`
     or `Match`.`away_player_11` = `Player`.`player_api_id`
 INNER JOIN `Team`
     on `Match`.`away_team_api_id` = `Team`.`team_api_id`
-where `Player`.`player_name` LIKE ('%Neymar%')
-    and upper(`Team`.`team_long_name`) like upper('%Barcelona%')
+where `Player`.`player_name` = ('Neymar')
+    and upper(`Team`.`team_long_name`) = upper('FC Barcelona')
     and year(`Match`.`date`) = '2015'
     and (`Match`.`away_team_goal` - `Match`.`home_team_goal`) <> 0;
