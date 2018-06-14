@@ -19,12 +19,7 @@ public class SimpleHttpServer {
 
 		arquivo = new File("config/config.json");// fazendo um objeto arquivo
 		if (!arquivo.exists()) {// testando se o arquivo já existe, caso não exista cria um novo
-			System.out.println("Server http: Arquivo de configuração inexistente");
-			Erro erro = new Erro();
-			erro.setErrorCode(417);
-			erro.setErrorDescription("Arquivo de configuração do servidor inexistente");
-			String json = gson.toJson(erro);
-			System.out.println(json);		
+			System.out.println("Arquivo de configuração inexistente, HTTP Server nao iniciado!");	
 		} else {
 			System.out.println("Server http: Abrindo arquivo de configuração.");
 			pegaTexto = new Scanner(arquivo); // pega texto do arquivo
