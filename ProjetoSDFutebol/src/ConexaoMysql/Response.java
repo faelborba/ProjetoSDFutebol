@@ -3,7 +3,6 @@ package ConexaoMysql;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import servidorHttp.Erro;
 
 public class Response {
 	private int wins;
@@ -29,13 +28,6 @@ public class Response {
 	@Override
 	public String toString() {
 		GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
-		if(wins == 0 && losses == 0) {
-			Erro erro = new Erro();
-			erro.setErrorCode(2);
-			erro.setErrorDescription("Dados Inexistentes");
-			Gson gson = builder.create();
-			return gson.toJson(erro);
-		}
 		Gson gson = builder.create();
 		return gson.toJson(this);
 	}

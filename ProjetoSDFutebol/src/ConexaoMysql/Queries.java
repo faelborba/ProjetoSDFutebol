@@ -31,7 +31,7 @@ public class Queries {
 				"    or `Match`.`home_player_9` = `Player`.`player_api_id`\n" + 
 				"    or `Match`.`home_player_10` = `Player`.`player_api_id`\n" + 
 				"    or `Match`.`home_player_11` = `Player`.`player_api_id`\n" + 
-				"where `Player`.`player_name` LIKE ('%" + playerName + "%')\n" + 
+				"where upper(`Player`.`player_name`) = upper('" + playerName + "')\n" + 
 				"    and year(`Match`.`date`) = '" + year + "'\n" + 
 				"    and (`Match`.`home_team_goal` - `Match`.`away_team_goal`) <> 0\n" + 
 				"union all\n" + 
@@ -49,7 +49,7 @@ public class Queries {
 				"    or `Match`.`away_player_9` = `Player`.`player_api_id`\n" + 
 				"    or `Match`.`away_player_10` = `Player`.`player_api_id`\n" + 
 				"    or `Match`.`away_player_11` = `Player`.`player_api_id`\n" + 
-				"where `Player`.`player_name` LIKE ('%" + playerName + "%')\n" + 
+				"where upper(`Player`.`player_name`) = upper('" + playerName + "')\n" + 
 				"    and year(`Match`.`date`) = '" + year + "'\n" + 
 				"    and (`Match`.`away_team_goal` - `Match`.`home_team_goal`) <> 0;";
 	}
@@ -63,7 +63,7 @@ public class Queries {
 				"from `Team`\n" + 
 				"inner join `Match`\n" + 
 				"    on `Match`.`home_team_api_id` = `Team`.`team_api_id`\n" + 
-				"where upper(`Team`.`team_long_name`) like upper('%" + clubName + "%')\n" + 
+				"where upper(`Team`.`team_long_name`) = upper('" + clubName + "')\n" + 
 				"    and year(`Match`.`date`) = '" + year + "'\n" + 
 				"    and (`Match`.`home_team_goal` - `Match`.`away_team_goal`) <> 0\n" + 
 				"union all\n" + 
@@ -71,7 +71,7 @@ public class Queries {
 				"from `Team`\n" + 
 				"inner join `Match`\n" + 
 				"    on `Match`.`away_team_api_id` = `Team`.`team_api_id`\n" + 
-				"where upper(`Team`.`team_long_name`) like upper('%" + clubName + "%')\n" + 
+				"where upper(`Team`.`team_long_name`) = upper('" + clubName + "')\n" + 
 				"    and year(`Match`.`date`) = '" + year + "'\n" + 
 				"    and (`Match`.`away_team_goal` - `Match`.`home_team_goal`) <> 0;";
 	}
@@ -97,8 +97,8 @@ public class Queries {
 				"    or `Match`.`home_player_11` = `Player`.`player_api_id`\n" + 
 				"INNER JOIN `Team`\n" + 
 				"    on `Match`.`home_team_api_id` = `Team`.`team_api_id`\n" + 
-				"where `Player`.`player_name` LIKE ('%" + playerName + "%')\n" + 
-				"    and upper(`Team`.`team_long_name`) like upper('%" + clubName + "%')\n" + 
+				"where `Player`.`player_name` = ('" + playerName + "')\n" + 
+				"    and upper(`Team`.`team_long_name`) = upper('" + clubName + "')\n" + 
 				"    and year(`Match`.`date`) = '" + year + "'\n" + 
 				"    and (`Match`.`home_team_goal` - `Match`.`away_team_goal`) <> 0\n" + 
 				"union all\n" + 
@@ -118,8 +118,8 @@ public class Queries {
 				"    or `Match`.`away_player_11` = `Player`.`player_api_id`\n" + 
 				"INNER JOIN `Team`\n" + 
 				"    on `Match`.`away_team_api_id` = `Team`.`team_api_id`\n" + 
-				"where `Player`.`player_name` LIKE ('%" + playerName + "%')\n" + 
-				"    and upper(`Team`.`team_long_name`) like upper('%" + clubName + "%')\n" + 
+				"where `Player`.`player_name` = ('" + playerName + "')\n" + 
+				"    and upper(`Team`.`team_long_name`) = upper('" + clubName + "')\n" + 
 				"    and year(`Match`.`date`) = '" + year + "'\n" + 
 				"    and (`Match`.`away_team_goal` - `Match`.`home_team_goal`) <> 0;";
 	}
@@ -180,7 +180,7 @@ public class Queries {
 		return(this.getWinsAndLosses(resultSet).toString());
 	}
 	
-	private Response getWinsAndLosses(ArrayList<Integer> resultSet) {
+	private String getWinsAndLosses(ArrayList<Integer> resultSet) {
 		int wins = 0;
 		int losses = 0;
 		int current;
@@ -193,7 +193,7 @@ public class Queries {
 				wins ++;
 			}
 		}
-		return new Response(wins, losses);
+		return (wins == 0 && losses == 0) ? "" : new Response(wins, losses).toString();
 	}
 	
 }
