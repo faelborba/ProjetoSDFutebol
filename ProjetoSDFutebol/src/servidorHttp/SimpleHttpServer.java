@@ -31,8 +31,8 @@ public class SimpleHttpServer {
 			ConfigClass config = gson.fromJson(textoConfig, ConfigClass.class);
 			
 			HttpServer server = HttpServer.create(new InetSocketAddress(config.getPortListen()), 0);
-			server.createContext("/getAvailabeYears", new RequestHandler());
-			server.createContext("/getData", new RequestHandler());
+			server.createContext("/getAvailabeYears", new RequestHandler(config));
+			server.createContext("/getData", new RequestHandler(config));
 			server.setExecutor(null);
 			server.start();
 			System.out.println("Server http: Online na porta " + config.getPortListen());
