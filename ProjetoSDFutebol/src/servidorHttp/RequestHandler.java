@@ -10,6 +10,8 @@ import com.sun.net.httpserver.HttpHandler;
 
 import ConexaoMysql.Queries;
 import cacheServer.Memcached;
+import cacheServer.MemcachedServer;
+import cacheServer.MemcachedServerList;
 
 public class RequestHandler implements HttpHandler {
 
@@ -17,11 +19,17 @@ public class RequestHandler implements HttpHandler {
 	private String cacheKeyClubAndPlayer;
 	private String cacheKeyClub;
 	private String cacheKeyPlayer;
+	private String cacheKeyListServers;
 	private Queries q = new Queries();
 	private int ano = 0;
 	private String playerName = "", clubName = "";
 	private int responseCode = 200;
+	private ConfigClass config = null; 
 
+	public RequestHandler(ConfigClass config) {
+		this.config = config;
+	}
+	
 	@Override
 	public void handle(HttpExchange exg) throws IOException {
 		String requestURI = exg.getRequestURI().toString();
@@ -44,19 +52,39 @@ public class RequestHandler implements HttpHandler {
 		this.cacheKeyClubAndPlayer = "SD_Data_" + ano + "_" + clubName + "_" + playerName;
 		this.cacheKeyClub = "SD_Data_" + ano + "_" + clubName;
 		this.cacheKeyPlayer = "SD_Data_" + ano + "_" + playerName;
+		this.cacheKeyListServers = "SD_ListServers";
+		
+		// pegando a lista de servidores no cache
+		String cacheData = cache.getCacheData(this.cacheKeyListServers);
+		String saveListResponse = this.saveListServersCacheJson(cacheData);
+		
+		if (cacheData == null || cacheData == "") { // adicionar o servidor na lista de servidores do cache
+			System.out.println("Lista de servidores não disponível cache, adicionando...");
+			System.out.println(saveListResponse);
+			cache.setCacheData(this.cacheKeyListServers, saveListResponse);			
+		} else {
+			System.out.println("Lista de servidores disponível cache - atualizando..."); // atualizar o servidor na lista de servidores do cache
+			cache.setCacheData(this.cacheKeyListServers, saveListResponse);	
+			System.out.println(saveListResponse);
+		}
+		
 		// esse if encadiado grandao, valida todos os possiveis requests, se for
 		// invalido cai no else e o http code vira 417
 		// por enquanto no response adicionei a descricao do que devera ser buscado no
 		// banco, futuramente tratamos e retornamos o JSON aqui
 		if (requestURI.matches("\\/getAvailabeYears$")) {
 			response = "Retornar Avaliable Years".getBytes();
+			
 		} else if (requestURI.matches("\\/getData\\/[0-9]{4}\\?playerName=[A-z]+\\+?[A-z]+$")) {
 			response = this.getResponse(this.cacheKeyPlayer).getBytes();
+			
 		} else if (requestURI.matches("\\/getData\\/[0-9]{4}\\?clubName=[A-z]+\\+?[A-z]+$")) {
 			response = this.getResponse(this.cacheKeyClub).getBytes();
+			
 		} else if (requestURI
 				.matches("\\/getData\\/[0-9]{4}\\?clubName=[A-z]+\\+?[A-z]+&playerName=[A-z]+\\+?[A-z]+$")) {
 			response = this.getResponse(this.cacheKeyClubAndPlayer).getBytes();
+			
 		} else {
 			responseCode = 417;
 			response = new Erro(3).toString().getBytes();
@@ -94,28 +122,99 @@ public class RequestHandler implements HttpHandler {
 		System.out.println(cacheData);
 		if (cacheData == null) {
 			System.out.println("Nao ta no cache");
-			if (cacheKey == this.cacheKeyClubAndPlayer) {
-				cacheData = q.getClubNameAndPlayerNameQueryResult(ano + "", clubName, playerName);
-			} else if (cacheKey == this.cacheKeyClub) {
-				cacheData = q.getClubNameQueryResult(ano + "", clubName);
-			} else if (cacheKey == this.cacheKeyPlayer) {
-				cacheData = q.getPlayerNameQueryResult(ano + "", playerName);
-			}
+			
+			if (this.verificaIsServerContemAno(ano)) { // verifica se servidor e responsavel pelo ano da consulta 
+				
+				if (cacheKey == this.cacheKeyClubAndPlayer) {
+					cacheData = q.getClubNameAndPlayerNameQueryResult(ano + "", clubName, playerName);
+				} else if (cacheKey == this.cacheKeyClub) {
+					cacheData = q.getClubNameQueryResult(ano + "", clubName);
+				} else if (cacheKey == this.cacheKeyPlayer) {
+					cacheData = q.getPlayerNameQueryResult(ano + "", playerName);
+				}
 
-			if (cacheData == "") {
-				System.out.println("Dado inexistente nao adicionado no cache");
-				this.responseCode = 417;
-				response = new Erro(2).toString();
+				if (cacheData == "") {
+					System.out.println("Dado inexistente nao adicionado no cache");
+					this.responseCode = 417;
+					response = new Erro(2).toString();
+				} else {
+					System.out.println("Adicionando no cache");
+					cache.setCacheData(cacheKey, cacheData);
+					response = cacheData;
+				}
 			} else {
-				System.out.println("Adicionando no cache");
-				cache.setCacheData(cacheKey, cacheData);
-				response = cacheData;
+				cacheData = cache.getCacheData(this.cacheKeyListServers);
+				MemcachedServer serverAno = this.verificaServerAno(ano, cacheData);
+				if (serverAno != null) {
+					//serverAno.getLocation() // fazer o request neste servidor
+				}
 			}
+			
+			
+			
 		} else {
 			System.out.println("Ja tava no cache");
 			response = cacheData;
 		}
 		return response;
 	}
-
+	
+	private String saveListServersCacheJson(String listaServersCache) {
+		if (listaServersCache == null) { // adicionar
+			MemcachedServerList lista = new MemcachedServerList();
+			
+			MemcachedServer thisServer = new MemcachedServer();
+			thisServer.setName(this.config.getServerName());
+			thisServer.setLocation(this.config.getServerIP());
+			thisServer.setYear(this.config.getYearData());
+			thisServer.setActive(true);
+			
+			lista.addServer(thisServer);
+			
+			return lista.toString();	
+			
+		} else { // alterar
+			MemcachedServerList lista = new MemcachedServerList();
+			lista = lista.toObjeto(listaServersCache);
+			
+			MemcachedServer thisServer = new MemcachedServer();
+			thisServer.setName(this.config.getServerName());
+			thisServer.setLocation(this.config.getServerIP());
+			thisServer.setYear(this.config.getYearData());
+			thisServer.setActive(true);
+			
+			lista.updateServer(thisServer);
+			
+			return lista.toString();
+		}
+	}
+	
+	private boolean verificaIsServerContemAno(int ano) {
+		if (this.config.getYearData().size() > 0) {
+			for (int itemAno : this.config.getYearData()) {
+				if (itemAno == ano) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private MemcachedServer verificaServerAno(int ano, String listaServersCache) {
+		MemcachedServerList lista = new MemcachedServerList();
+		lista = lista.toObjeto(listaServersCache);
+		
+		if (lista.getServers().size() > 0) {
+			for (MemcachedServer itemMemcached : lista.getServers()) {
+				if (itemMemcached.getYear().size() > 0) {
+					for (int itemAno : itemMemcached.getYear()) {
+						if (itemAno == ano) {
+							return (MemcachedServer)itemMemcached;
+						}
+					}
+				}
+			}
+		}
+		return (MemcachedServer)null;
+	}
 }
