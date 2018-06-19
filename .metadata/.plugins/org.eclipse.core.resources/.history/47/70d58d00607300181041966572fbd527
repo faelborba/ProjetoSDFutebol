@@ -1,0 +1,8 @@
+package ConexaoMysql;
+
+public class ConfigMysql {
+	String serverName = null;
+	String mydatabase = null;
+	String userName = null;
+	String password = null;
+}

@@ -82,7 +82,7 @@ INNER JOIN `Match`
     or `Match`.`home_player_11` = `Player`.`player_api_id`
 INNER JOIN `Team`
     on `Match`.`home_team_api_id` = `Team`.`team_api_id`
-where `Player`.`player_name` = ('Neymar')
+where upper(`Player`.`player_name`) = upper('Neymar')
     and upper(`Team`.`team_long_name`) = upper('FC Barcelona')
     and year(`Match`.`date`) = '2015'
     and (`Match`.`home_team_goal` - `Match`.`away_team_goal`) <> 0
@@ -103,7 +103,7 @@ INNER JOIN `Match`
     or `Match`.`away_player_11` = `Player`.`player_api_id`
 INNER JOIN `Team`
     on `Match`.`away_team_api_id` = `Team`.`team_api_id`
-where `Player`.`player_name` = ('Neymar')
+where upper(`Player`.`player_name`) = upper('Neymar')
     and upper(`Team`.`team_long_name`) = upper('FC Barcelona')
     and year(`Match`.`date`) = '2015'
     and (`Match`.`away_team_goal` - `Match`.`home_team_goal`) <> 0;

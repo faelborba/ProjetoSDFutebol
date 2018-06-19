@@ -97,7 +97,7 @@ public class Queries {
 				"    or `Match`.`home_player_11` = `Player`.`player_api_id`\n" + 
 				"INNER JOIN `Team`\n" + 
 				"    on `Match`.`home_team_api_id` = `Team`.`team_api_id`\n" + 
-				"where `Player`.`player_name` = ('" + playerName + "')\n" + 
+				"where upper(`Player`.`player_name`) = upper('" + playerName + "')\n" + 
 				"    and upper(`Team`.`team_long_name`) = upper('" + clubName + "')\n" + 
 				"    and year(`Match`.`date`) = '" + year + "'\n" + 
 				"    and (`Match`.`home_team_goal` - `Match`.`away_team_goal`) <> 0\n" + 
@@ -118,7 +118,7 @@ public class Queries {
 				"    or `Match`.`away_player_11` = `Player`.`player_api_id`\n" + 
 				"INNER JOIN `Team`\n" + 
 				"    on `Match`.`away_team_api_id` = `Team`.`team_api_id`\n" + 
-				"where `Player`.`player_name` = ('" + playerName + "')\n" + 
+				"where upper(`Player`.`player_name`) = upper('" + playerName + "')\n" + 
 				"    and upper(`Team`.`team_long_name`) = upper('" + clubName + "')\n" + 
 				"    and year(`Match`.`date`) = '" + year + "'\n" + 
 				"    and (`Match`.`away_team_goal` - `Match`.`home_team_goal`) <> 0;";

@@ -1,1 +1,39 @@
 # ProjetoSDFutebol
+# Tutorial de configuração do MySql
+Nosso sistema utiliza MySql com base de dados. Então para poder utiliza-lo você terá que instalar um servidor mysql ou mariadb em sua máquina, caso preferir pode usar um externo de sua preferência.<br>
+<b>1º)</b> Instale o servidor MySQL.<br>
+Se estiver usando a distro ubuntu, em seu terminal rode o comando abaixo. <br>
+sudo apt-get install mariadb-server<br>
+<b>2º)</b> Após instalação você deve iniciar o servidor mysql.<br>
+eu uso o comando abaixo no ubuntu.<br>
+sudo service mysql start <br>
+<b>3º)</b> Acesse seu SGDB mysql através do terminal use os comandos abaixo (os campos em aspas, troque por seus dados de acesso):<br>
+mysql -u "usuário do banco" -h "endereço do server" -p "senha"<br>
+Ficando com a sintaxe abaixo.<br>
+mysql -u root -h localhost -p 123456<br>
+<b>4º)</b> Agora você deve criar a base de dados no seu servidor mysql.<br>
+Para isso dentro do mysql rode o comando abaixo.<br>
+create database TrabalhoG2<br>
+Agora saia do MySql.
+<b>5º)</b> Importe a base de dados do trabalho que encontra-se em uma rquivo sql.<br>
+Baixe o arquivo sql que consta no link abaixo em sua máquina.<br>
+https://github.com/faelborba/ProjetoSDFutebol/blob/master/ProjetoSDFutebol/db/TrabalhoG2.sql<br>
+Efetuar a importação da base de dados para uma base nova criada em seu mysql.<br>
+Para isso use o comando abaixo diretamente no terminal<br>
+mysql -u root -h localhost -p 123456 TrabalhoG2 < <Caminho completo do arquivo/TrabalhoG2.sql>.<br>
+<b>6º)</b> Agora você deve configurar o mysql no arquivo de configuração respectivo.<br>
+Para isso você deve acessar a o arquivo "configMysql.json" que está dentro da pasta config da raiz do projeto.<br>
+Caminho: "ProjetoSDFutebol/config/configMysql.json"<br>
+Conteúdo do arquivo em json:<br>
+{<br>
+    "serverName" : "localhost",<br>
+    "mydatabase" : "TrabalhoG2",<br>
+    "userName" : "root",<br>
+    "password" : ""<br>
+}<br>
+Onde serverName está definido como "localhost" e você deve definir com o seu endereço do mysql.<br>
+E mydatabase está como "TrabalhoG2", caso tenha nomeado de outra forma no ítem 4 você deve alterar aqui também.<br>
+O userName está "root" e você deve definir com o nome de usuário que usa para acessar o mysql.<br>
+O Password está sem senha, mas caso utilize algum você deve preenxer conforme a senha definida para seu usuário Mysql.<br>
+
+Fim!
