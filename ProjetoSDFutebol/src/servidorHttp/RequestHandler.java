@@ -15,7 +15,7 @@ import cacheServer.MemcachedServerList;
 
 public class RequestHandler implements HttpHandler {
 
-	private Memcached cache = new Memcached("localhost:11211");
+	private Memcached cache;
 	private String cacheKeyClubAndPlayer;
 	private String cacheKeyClub;
 	private String cacheKeyPlayer;
@@ -28,6 +28,7 @@ public class RequestHandler implements HttpHandler {
 
 	public RequestHandler(ConfigClass config) {
 		this.config = config;
+		this.cache = new Memcached(this.config.getMemcachedServer() + ":" + this.config.getMemcachedPort());
 	}
 	
 	@Override
@@ -149,9 +150,6 @@ public class RequestHandler implements HttpHandler {
 					//serverAno.getLocation() // fazer o request neste servidor
 				}
 			}
-			
-			
-			
 		} else {
 			System.out.println("Ja tava no cache");
 			response = cacheData;
@@ -177,13 +175,27 @@ public class RequestHandler implements HttpHandler {
 			MemcachedServerList lista = new MemcachedServerList();
 			lista = lista.toObjeto(listaServersCache);
 			
+			boolean isServerList = false;
+			
+			if (lista.getServers().size() > 0) {
+				for (MemcachedServer itemMemcached : lista.getServers()) {
+					if (itemMemcached.getName().equals(this.config.getServerName())) {
+						isServerList = true;
+					}
+				}
+			}
+			
 			MemcachedServer thisServer = new MemcachedServer();
 			thisServer.setName(this.config.getServerName());
 			thisServer.setLocation(this.config.getServerIP() + ":" + this.config.getPortListen());
 			thisServer.setYear(this.config.getYearData());
 			thisServer.setActive(true);
 			
-			lista.updateServer(thisServer);
+			if (isServerList) {
+				lista.updateServer(thisServer);
+			} else {
+				lista.addServer(thisServer);
+			}
 			
 			return lista.toString();
 		}
