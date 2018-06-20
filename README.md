@@ -1,6 +1,20 @@
 # ProjetoSDFutebol
 # Tutorial de configuração do MySql
-Nosso sistema utiliza MySql com base de dados. Então para poder utiliza-lo você terá que instalar um servidor mysql ou mariadb em sua máquina, caso preferir pode usar um externo de sua preferência.<br>
+O projeto tem como objetivo criar um sistema de banco de dados distribuido entre os Alunos da turma de Sistemas Distribuídos da faculdade de Ciência da Computação da Ulbra, 2018/1.<br>
+Usamos as seguintes tecnologias para desenvolver o projeto:<br>
+-Java com JDK 8 ou superior.<br>
+-Banco de dados MySQL.<br>
+-E serviço de Memcached.<br>
+
+Indicamos ter instalado em sua máquina a ferramenta Eclipse para compilação e execução do servidor.<br>
+
+Para começar é necessários importar o projeto inteiro em seu Eclipse, todas as bibliotecas java necessárias já estão inclusas nele.<br>
+
+O arquivo de configuração do servidor está no caminho abaixo, arquivo em json:<br>
+. ProjetoSDFutebol/config/config.json<br>
+Nele você pode definir host, porta e outros detalhes pertinentes ao projeto, como o ano que cada servidor deve pesquisar.<br>
+
+Abaixo os passos para instalar o servidor de banco de dados e importar a base. Pode ser mysql ou mariadb em sua máquina.<br>
 <b>1º)</b> Instale o servidor MySQL.<br>
 Se estiver usando a distro ubuntu, em seu terminal rode o comando abaixo. <br>
 sudo apt-get install mariadb-server<br>
@@ -14,7 +28,7 @@ mysql -u root -h localhost -p 123456<br>
 <b>4º)</b> Agora você deve criar a base de dados no seu servidor mysql.<br>
 Para isso dentro do mysql rode o comando abaixo.<br>
 create database TrabalhoG2<br>
-Agora saia do MySql.
+Agora saia do MySql.<br>
 <b>5º)</b> Importe a base de dados do trabalho que encontra-se em uma rquivo sql.<br>
 Baixe o arquivo sql que consta no link abaixo em sua máquina.<br>
 https://github.com/faelborba/ProjetoSDFutebol/blob/master/ProjetoSDFutebol/db/TrabalhoG2.sql<br>
