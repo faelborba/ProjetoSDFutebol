@@ -1,5 +1,5 @@
 # ProjetoSDFutebol
-# Tutorial de configuração do MySql
+
 O projeto tem como objetivo criar um sistema de banco de dados distribuido entre os Alunos da turma de Sistemas Distribuídos da faculdade de Ciência da Computação da Ulbra, 2018/1.<br>
 Usamos as seguintes tecnologias para desenvolver o projeto:<br>
 -Java com JDK 8 ou superior.<br>
@@ -13,6 +13,8 @@ Para começar é necessários importar o projeto inteiro em seu Eclipse, todas a
 O arquivo de configuração do servidor está no caminho abaixo, arquivo em json:<br>
 . ProjetoSDFutebol/config/config.json<br>
 Nele você pode definir host, porta e outros detalhes pertinentes ao projeto, como o ano que cada servidor deve pesquisar.<br>
+
+# Tutorial de configuração do MySql
 
 Abaixo os passos para instalar o servidor de banco de dados e importar a base. Pode ser mysql ou mariadb em sua máquina.<br>
 <b>1º)</b> Instale o servidor MySQL.<br>
