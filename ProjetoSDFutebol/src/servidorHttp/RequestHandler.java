@@ -165,8 +165,8 @@ public class RequestHandler implements HttpHandler {
 			
 			MemcachedServer thisServer = new MemcachedServer();
 			thisServer.setName(this.config.getServerName());
-			thisServer.setLocation(this.config.getServerIP());
-			thisServer.setYear(this.config.getYearData());
+			thisServer.setLocation(this.config.getServerIP() + ":" + this.config.getPortListen());
+			thisServer.setYear(this.config.getYearData());		
 			thisServer.setActive(true);
 			
 			lista.addServer(thisServer);
@@ -179,7 +179,7 @@ public class RequestHandler implements HttpHandler {
 			
 			MemcachedServer thisServer = new MemcachedServer();
 			thisServer.setName(this.config.getServerName());
-			thisServer.setLocation(this.config.getServerIP());
+			thisServer.setLocation(this.config.getServerIP() + ":" + this.config.getPortListen());
 			thisServer.setYear(this.config.getYearData());
 			thisServer.setActive(true);
 			
