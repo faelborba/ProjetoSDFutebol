@@ -8,11 +8,11 @@ INDEX VERSION 1.130+/home/rafael/Dropbox/9semestre/SistemasDistribuidos/trabalho
 3721837726.index
 35667519.index
 120211678.index
-2630498905.index
-3214207201.index
-1966447347.index
-742522455.index
 527624335.index
+742522455.index
+1966447347.index
+3214207201.index
+2630498905.index
 46282419.index
 2066489604.index
 1932949083.index
