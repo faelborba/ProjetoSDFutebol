@@ -3,6 +3,8 @@ package servidorHttp;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import ConexaoMysql.Response;
+
 public class Erro {
 	public int errorCode = 0;
 	public String errorDescription = null;
@@ -50,4 +52,9 @@ public class Erro {
 		return gson.toJson(this);
 	}
 	
+	public Erro toObjeto(String erroString) {
+		Gson gson = new Gson();
+		Erro erro = gson.fromJson(erroString, Erro.class);
+		return erro;
+	}
 }

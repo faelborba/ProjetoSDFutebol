@@ -1,7 +1,11 @@
 package servidorHttp;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +13,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import ConexaoMysql.Queries;
+import ConexaoMysql.Response;
 import cacheServer.Memcached;
 import cacheServer.MemcachedServer;
 import cacheServer.MemcachedServerList;
@@ -24,7 +29,10 @@ public class RequestHandler implements HttpHandler {
 	private int ano = 0;
 	private String playerName = "", clubName = "";
 	private int responseCode = 200;
-	private ConfigClass config = null; 
+	private ConfigClass config = null;
+	
+	private String requestQuery = "";
+	//private boolean isAtualizarListaServers = false;
 
 	public RequestHandler(ConfigClass config) {
 		this.config = config;
@@ -36,6 +44,8 @@ public class RequestHandler implements HttpHandler {
 		String requestURI = exg.getRequestURI().toString();
 		String requestQuery = exg.getRequestURI().getQuery();
 		byte[] response = null;
+		
+		this.requestQuery = requestQuery;
 
 		// aqui se tiver um 3 parametro no request (a data no caso) ele ja assigna os
 		// valores
@@ -69,12 +79,11 @@ public class RequestHandler implements HttpHandler {
 			System.out.println(saveListResponse);
 		}
 		
-		// esse if encadiado grandao, valida todos os possiveis requests, se for
-		// invalido cai no else e o http code vira 417
-		// por enquanto no response adicionei a descricao do que devera ser buscado no
-		// banco, futuramente tratamos e retornamos o JSON aqui
+		// esse if encadiado grandao, valida todos os possiveis requests, se for invalido cai no else e o http code vira 417
+		// por enquanto no response adicionei a descricao do que devera ser buscado no banco, futuramente tratamos e retornamos o JSON aqui
 		if (requestURI.matches("\\/getAvailabeYears$")) {
-			response = "Retornar Avaliable Years".getBytes();
+			response = this.config.yearsToString().getBytes();	
+			//response = "Retornar Avaliable Years".getBytes();
 			
 		} else if (requestURI.matches("\\/getData\\/[0-9]{4}\\?playerName=[A-z]+\\+?[A-z]+$")) {
 			response = this.getResponse(this.cacheKeyPlayer).getBytes();
@@ -144,10 +153,48 @@ public class RequestHandler implements HttpHandler {
 					response = cacheData;
 				}
 			} else {
+				System.out.println("A requisição solicitada do ano " + ano + " não se encontra neste servidor, estamos buscando o server...");
+				
 				cacheData = cache.getCacheData(this.cacheKeyListServers);
 				MemcachedServer serverAno = this.verificaServerAno(ano, cacheData);
-				if (serverAno != null) {
+				if (serverAno != null) {	
+					System.out.println("Servidor encontrado. Buscando...");
+					
+					System.out.println("O servidor encontrado:");
+					System.out.printf("\nName: %s", serverAno.getName());
+					System.out.printf("\nLocation: %s", serverAno.getLocation());
+					System.out.printf("\nYear's: %s", serverAno.getYear());
+					
 					//serverAno.getLocation() // fazer o request neste servidor
+					String responseReqOtherServer =	this.sendGetOtherServer(serverAno.getLocation(), this.ano, this.requestQuery);
+					
+					if (responseReqOtherServer.equals("-1")) { // se ocorreu qualquer execption retorna como erro
+						System.out.println("Ocorreu uma falha ao realizar a requisição para o outro servidor. Não foi encontrado o resultado...");
+						this.responseCode = 417;
+						response = new Erro(1).toString();
+					} else {
+						if (responseReqOtherServer.contains("wins") || responseReqOtherServer.contains("losses")) {
+							// converter o resultado como o padrão 
+							Response res = new Response(0, 0);
+							res = res.toObjeto(responseReqOtherServer);
+							return res.toString();
+
+						} else if (responseReqOtherServer.contains("errorCode")) {
+							// converter o resultado para o erro
+							Erro erro = new Erro(2);
+							erro = erro.toObjeto(responseReqOtherServer);
+							return erro.toString();
+							
+						} else {
+							this.responseCode = 417;
+							response = new Erro(3).toString();
+						}
+					}
+					
+				} else {
+					System.out.println("Nenhum servidor encontrado para este ano. Não foi encontrado o resultado...");
+					this.responseCode = 417;
+					response = new Erro(1).toString();
 				}
 			}
 		} else {
@@ -229,4 +276,63 @@ public class RequestHandler implements HttpHandler {
 		}
 		return (MemcachedServer)null;
 	}
+	
+	public void buscarAtualizarListaServersMemcached() {
+		this.cacheKeyListServers = "SD_ListServers";
+		
+		// pegando a lista de servidores no cache
+		String cacheData = cache.getCacheData(this.cacheKeyListServers);
+		String saveListResponse = this.saveListServersCacheJson(cacheData);
+		
+		if (cacheData == null || cacheData == "") { // adicionar o servidor na lista de servidores do cache
+			System.out.println("Lista de servidores não disponível cache, adicionando...");
+			System.out.println(saveListResponse);
+			cache.setCacheData(this.cacheKeyListServers, saveListResponse);			
+		} else {
+			System.out.println("Lista de servidores disponível cache - atualizando..."); // atualizar o servidor na lista de servidores do cache
+			cache.setCacheData(this.cacheKeyListServers, saveListResponse);	
+			System.out.println(saveListResponse);
+		}
+	}
+	
+	private String sendGetOtherServer(String serverLocation, int ano, String requestQuery) { // HTTP GET request outros servidores
+		String retResponse = "";
+		
+		try {
+			String uri = String.format("http://%s/getData/%d?%s", serverLocation, ano, requestQuery); // ex: http://192.168.0.135/getData/2011?playerName=Lionel+Messi
+			System.out.println("sendGet uri => " + uri);
+			
+			URL obj = new URL(uri);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+			// optional default is GET
+			con.setRequestMethod("GET");
+
+			int responseCode = con.getResponseCode();
+			System.out.println("\nSending 'GET' request to URL : " + uri);
+			System.out.println("Response Code : " + responseCode);
+
+			BufferedReader in = new BufferedReader(
+			        new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			con.disconnect();
+			retResponse = response.toString();
+
+			//print result
+			System.out.println(response.toString());
+			
+		} catch (Exception e) {
+			System.out.println("Ocorreu uma falha ao tentar se conectar com o servidor... Erro: " + e.getMessage());
+			retResponse = "-1";
+		}
+		
+		return retResponse;
+	}
+		
 }
