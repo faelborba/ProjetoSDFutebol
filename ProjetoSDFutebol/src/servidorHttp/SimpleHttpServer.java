@@ -36,6 +36,7 @@ public class SimpleHttpServer {
 			server.setExecutor(null);
 			server.start();
 			System.out.println("Server http: Online na porta " + config.getPortListen());
+			new RequestHandler(config).buscarAtualizarListaServersMemcached(); // reqquest apenas para atualizar lista de servers no memcached
 		}
 
 		

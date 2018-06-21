@@ -2,6 +2,9 @@ package servidorHttp;
 
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class ConfigClass {
 	private String serverName = null;
 	private String serverIP = null;
@@ -57,5 +60,25 @@ public class ConfigClass {
 	public void setYearData(ArrayList<Integer> yearData) {
 		this.yearData = yearData;
 	}
-
+	
+	@Override
+	public String toString() {
+		GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
+		Gson gson = builder.create();
+		return gson.toJson(this);
+	}
+	
+	class ConfigClassOnlyYears {
+		private ArrayList<Integer> years = null;
+	}
+	
+	public String yearsToString() {
+		GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
+		Gson gson = builder.create();
+		
+		ConfigClassOnlyYears configYears = new ConfigClassOnlyYears();
+		configYears.years = this.getYearData();
+		
+		return gson.toJson(configYears);
+	}
 }
