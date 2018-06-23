@@ -3,13 +3,15 @@
 O projeto tem como objetivo criar um sistema de banco de dados distribuido entre os Alunos da turma de Sistemas Distribuídos da faculdade de Ciência da Computação da Ulbra, 2018/1.<br>
 Os autores são:<br>
 Bruno Cunha, Eric Quadros e Rafael Borba<br>
-Usamos as seguintes tecnologias para desenvolver o projeto:<br>
+
+Foi usada as seguintes tecnologias para desenvolver o projeto:<br>
 -Java com JDK 8 ou superior.<br>
 -Banco de dados MySQL.<br>
 -E serviço de Memcached.<br>
 Abaixo Segue o Manual para configuração do ambiente de testes.<br>
 
-Indicamos ter instalado em sua máquina a ferramenta Eclipse para compilação e execução do servidor.<br>
+<h1>Manual de configuração do ambiente de testes.</h1>
+É necessário ter instalado em sua máquina a ferramenta de desenvolvimento Eclipse, para compilação e execução do servidor.<br>
 
 Para começar é necessários importar o projeto inteiro em seu Eclipse, todas as bibliotecas java necessárias já estão inclusas nele.<br>
 
@@ -17,7 +19,7 @@ O arquivo de configuração do servidor está no caminho abaixo, arquivo em json
 . ProjetoSDFutebol/config/config.json<br>
 Nele você pode definir host, porta e outros detalhes pertinentes ao projeto, como o ano que cada servidor deve pesquisar.<br>
 
-<h1> Tutorial de configuração do MySql</h1>
+<h2> Tutorial de configuração do MySql</h2>
 
 Abaixo os passos para instalar o servidor de banco de dados e importar a base. Pode ser mysql ou mariadb em sua máquina.<br>
 <b>1º)</b> Instale o servidor MySQL.<br>
