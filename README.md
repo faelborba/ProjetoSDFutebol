@@ -18,10 +18,19 @@ Para começar é necessários importar o projeto inteiro em seu Eclipse, todas a
 O arquivo de configuração do servidor está no caminho abaixo, arquivo em json:<br>
 . ProjetoSDFutebol/config/config.json<br>
 Nele você pode definir host, porta e outros detalhes pertinentes ao projeto, como o ano que cada servidor deve pesquisar.<br>
+Segue a sintaxe:<br>
+{<br>
+  &emsp;"serverName" : "serverBER2",<br>
+  &emsp;"serverIP" : "localhost",<br>
+  &emsp;"portListen" : 1112,<br>
+  &emsp;"memcachedServer" : "localhost",<br>
+  &emsp;"memcachedPort" : 11211,<br>
+  &emsp;"yearData" : [2014, 2010]<br>
+}<br>
 
 <h2> Tutorial de configuração do MySql</h2>
 
-Abaixo os passos para instalar o servidor de banco de dados e importar a base. Pode ser mysql ou mariadb em sua máquina.<br>
+Abaixo os passos para instalar o servidor de banco de dados e importar a base. Pode ser mysql ou mariadb em sua máquina. Caso já tenha instalado Pule direto para a segunda parte.<br>
 <b>1º)</b> Instale o servidor MySQL.<br>
 Se estiver usando a distro ubuntu, em seu terminal rode o comando abaixo. <br>
 sudo apt-get install mariadb-server<br>
@@ -47,10 +56,10 @@ Para isso você deve acessar a o arquivo "configMysql.json" que está dentro da 
 Caminho: "ProjetoSDFutebol/config/configMysql.json"<br>
 Conteúdo do arquivo em json:<br>
 {<br>
-    "serverName" : "localhost",<br>
-    "mydatabase" : "TrabalhoG2",<br>
-    "userName" : "root",<br>
-    "password" : ""<br>
+    &emsp;"serverName" : "localhost",<br>
+    &emsp;"mydatabase" : "TrabalhoG2",<br>
+    &emsp;"userName" : "root",<br>
+    &emsp;"password" : ""<br>
 }<br>
 Onde serverName está definido como "localhost" e você deve definir com o seu endereço do mysql.<br>
 E mydatabase está como "TrabalhoG2", caso tenha nomeado de outra forma no ítem 4 você deve alterar aqui também.<br>
