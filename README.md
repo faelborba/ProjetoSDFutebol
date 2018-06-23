@@ -12,9 +12,7 @@ Abaixo Segue o Manual para configuração do ambiente de testes.<br>
 
 <h1>Manual de configuração do ambiente de testes.</h1>
 É necessário ter instalado em sua máquina a ferramenta de desenvolvimento Eclipse, para compilação e execução do servidor.<br>
-
 Para começar é necessários importar o projeto inteiro em seu Eclipse, todas as bibliotecas java necessárias já estão inclusas nele.<br>
-
 O arquivo de configuração do servidor está no caminho abaixo, arquivo em json:<br>
 . ProjetoSDFutebol/config/config.json<br>
 Nele você pode definir host, porta e outros detalhes pertinentes ao projeto, como o ano que cada servidor deve pesquisar.<br>
