@@ -92,7 +92,7 @@ public class RequestHandler implements HttpHandler {
 		} else if (requestURI.matches("\\/getData\\/[0-9]{4}\\?playerName=[[A-z[\\-]]+\\+?[A-z]]+$")) {
 			response = this.getResponse(this.cacheKeyPlayer).getBytes();
 
-		} else if (requestURI.matches("\\/getData\\/[0-9]{4}\\?clubName=[[A-z[\\-]]+\\+?[A-z]]+$")) {
+		} else if (requestURI.matches("\\/getData\\/[0-9]{4}\\?clubName=[[A-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ[\\-]]+\\+?[A-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]]+$")) {
 			response = this.getResponse(this.cacheKeyClub).getBytes();
 
 		} else if (requestURI
