@@ -160,7 +160,7 @@ public class RequestHandler implements HttpHandler {
 				if (serverAno != null) {	
 					System.out.println("Servidor encontrado. Buscando...");
 					
-					System.out.println("O servidor encontrado:");
+					System.out.println("\nO servidor encontrado: ");
 					System.out.printf("\nName: %s", serverAno.getName());
 					System.out.printf("\nLocation: %s", serverAno.getLocation());
 					System.out.printf("\nYear's: %s", serverAno.getYear());
@@ -169,7 +169,7 @@ public class RequestHandler implements HttpHandler {
 					String responseReqOtherServer =	this.sendGetOtherServer(serverAno.getLocation(), this.ano, this.requestQuery);
 					
 					if (responseReqOtherServer.equals("-1")) { // se ocorreu qualquer execption retorna como erro
-						System.out.println("Ocorreu uma falha ao realizar a requisição para o outro servidor. Não foi encontrado o resultado...");
+						System.out.println("Ocorreu uma falha ao realizar a requisição para o outro servidor. Servidor indisponível...");
 						this.responseCode = 417;
 						response = new Erro(1).toString();
 					} else {

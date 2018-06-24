@@ -1,8 +1,8 @@
 {
-  "serverName" : "serverBER",
-  "serverIP" : "127.0.0.1",
+  "serverName" : "serverEric",
+  "serverIP" : "192.168.1.119",
   "portListen" : 1111,
-  "memcachedServer" : "10.1.1.1",
+  "memcachedServer" : "192.168.1.119",
   "memcachedPort" : 11211,
-  "yearData" : [1999, 2000]
+  "yearData" : [2014, 2015]
 }
