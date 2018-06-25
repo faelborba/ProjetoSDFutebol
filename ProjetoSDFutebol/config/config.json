@@ -1,5 +1,5 @@
 {
-  "serverName" : "serverBER2",
+  "serverName" : "serverBER",
   "serverIP" : "localhost",
   "portListen" : 1111,
   "memcachedServer" : "127.0.0.1",
