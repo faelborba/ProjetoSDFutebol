@@ -164,13 +164,8 @@ public class RequestHandler implements HttpHandler {
 				MemcachedServer serverAno = this.verificaServerAno(ano, cacheData);
 				if (serverAno != null) {
 					System.out.println("Servidor encontrado. Buscando...");
-<<<<<<< HEAD
 					
 					System.out.println("\nO servidor encontrado: ");
-=======
-
-					System.out.println("O servidor encontrado:");
->>>>>>> upstream/master
 					System.out.printf("\nName: %s", serverAno.getName());
 					System.out.printf("\nLocation: %s", serverAno.getLocation());
 					System.out.printf("\nYear's: %s", serverAno.getYear());
@@ -180,12 +175,7 @@ public class RequestHandler implements HttpHandler {
 							this.requestQuery);
 
 					if (responseReqOtherServer.equals("-1")) { // se ocorreu qualquer execption retorna como erro
-<<<<<<< HEAD
 						System.out.println("Ocorreu uma falha ao realizar a requisição para o outro servidor. Servidor indisponível...");
-=======
-						System.out.println(
-								"Ocorreu uma falha ao realizar a requisição para o outro servidor. Não foi encontrado o resultado...");
->>>>>>> upstream/master
 						this.responseCode = 417;
 						response = new Erro(1).toString();
 					} else {
