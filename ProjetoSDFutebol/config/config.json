@@ -1,0 +1,8 @@
+{
+  "serverName" : "serverBER",
+  "serverIP" : "127.0.0.1",
+  "portListen" : 1111,
+  "memcachedServer" : "127.0.0.1",
+  "memcachedPort" : 11211,
+  "yearData" : [2010, 2014, 2015]
+}
