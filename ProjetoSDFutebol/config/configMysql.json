@@ -1,5 +1,5 @@
 {
-	"serverName" : "localhost",
+	"serverName" : "127.0.0.1",
 	"mydatabase" : "TrabalhoG2",
 	"userName" : "root",
 	"password" : ""
