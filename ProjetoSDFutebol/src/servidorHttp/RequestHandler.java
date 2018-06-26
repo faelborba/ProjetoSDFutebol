@@ -47,12 +47,12 @@ public class RequestHandler implements HttpHandler {
 		byte[] response = null;
 		
 		/*System.out.println("Testando URI SEM URLdecoder: " + requestURI);*/		
-		requestURI = URLDecoder.decode(requestURI, "UTF-8").replace(" ", "+");		
+//		requestURI = URLDecoder.decode(requestURI, "UTF-8").replace(" ", "+");		
 		/*System.out.println("Testando URI COM URLdecoder: " + requestURI);*/
 		
-		/*System.out.println("Testando Query SEM URLdecoder: " + requestQuery);		
+		/*System.out.println("Testando Query SEM URLdecoder: " + requestQuery);*/		
 		requestQuery = URLDecoder.decode(requestQuery, "UTF-8").replace(" ", "+");		
-		System.out.println("Testando Query COM URLdecoder: " + requestQuery);*/
+		/*System.out.println("Testando Query COM URLdecoder: " + requestQuery);*/
 
 		this.requestQuery = requestQuery;
 
