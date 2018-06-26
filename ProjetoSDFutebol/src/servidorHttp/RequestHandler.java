@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,17 +45,27 @@ public class RequestHandler implements HttpHandler {
 		String requestURI = exg.getRequestURI().toString();
 		String requestQuery = exg.getRequestURI().getQuery();
 		byte[] response = null;
+		
+		/*System.out.println("Testando URI SEM URLdecoder: " + requestURI);*/		
+		requestURI = URLDecoder.decode(requestURI, "UTF-8").replace(" ", "+");		
+		/*System.out.println("Testando URI COM URLdecoder: " + requestURI);*/
+		
+		/*System.out.println("Testando Query SEM URLdecoder: " + requestQuery);		
+		requestQuery = URLDecoder.decode(requestQuery, "UTF-8").replace(" ", "+");		
+		System.out.println("Testando Query COM URLdecoder: " + requestQuery);*/
 
 		this.requestQuery = requestQuery;
 
-		// aqui se tiver um 3 parametro no request (a data no caso) ele ja assigna os valores
+		// aqui se tiver um 3 parametro no request (a data no caso) ele ja assigna os
+		// valores
 		if (exg.getRequestURI().getPath().split("/").length > 2) {
 			String data = exg.getRequestURI().getPath().split("/")[2];
 			this.ano = Integer.parseInt(data);
 		}
 
 		if (requestQuery != null) {
-			// Ja estou assignando valor para o player name e club name aqui, se nao tiver no request, nao assigna valor
+			// Ja estou assignando valor para o player name e club name aqui, se nao tiver
+			// no request, nao assigna valor
 			playerName = this.queryToMap(exg.getRequestURI().getQuery()).get("playerName");
 			clubName = this.queryToMap(exg.getRequestURI().getQuery()).get("clubName");
 		}
@@ -72,24 +83,28 @@ public class RequestHandler implements HttpHandler {
 			System.out.println(saveListResponse);
 			cache.setCacheData(this.cacheKeyListServers, saveListResponse);
 		} else {
-			System.out.println("Lista de servidores disponível cache - atualizando..."); // atualizar o servidor na lista de servidores do cache
+			System.out.println("Lista de servidores disponível cache - atualizando..."); // atualizar o servidor na
+																							// lista de servidores do
+																							// cache
 			cache.setCacheData(this.cacheKeyListServers, saveListResponse);
 			System.out.println(saveListResponse);
 		}
 
-		// esse if encadiado grandao, valida todos os possiveis requests, se for invalido cai no else e o http code vira 417
-		// por enquanto no response adicionei a descricao do que devera ser buscado no banco, futuramente tratamos e retornamos o JSON aqui
+		// esse if encadiado grandao, valida todos os possiveis requests, se for
+		// invalido cai no else e o http code vira 417
+		// por enquanto no response adicionei a descricao do que devera ser buscado no
+		// banco, futuramente tratamos e retornamos o JSON aqui
 		if (requestURI.matches("\\/getAvailabeYears$")) {
 			response = this.config.yearsToString().getBytes();
 
-		} else if (requestURI.matches("\\/getData\\/[0-9]{4}\\?playerName=[[A-z[\\-]]+\\+?[A-z]]+$")) {
+		} else if (requestURI.matches("\\/getData\\/[0-9]{4}\\?playerName=[[A-záàâãéèêíïóôõöúüçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÜÇÑ[\\-]]+\\+?[A-záàâãéèêíïóôõöúüçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÜÇÑ]]+$")) {
 			response = this.getResponse(this.cacheKeyPlayer).getBytes();
 
-		} else if (requestURI.matches("\\/getData\\/[0-9]{4}\\?clubName=[[A-z[\\-]]+\\+?[A-z]]+$")) {
+		} else if (requestURI.matches("\\/getData\\/[0-9]{4}\\?clubName=[[A-záàâãéèêíïóôõöúüçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÜÇÑ[\\-]]+\\+?[A-záàâãéèêíïóôõöúüçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÜÇÑ]]+$")) {
 			response = this.getResponse(this.cacheKeyClub).getBytes();
 
-		} else if (requestURI
-				.matches("\\/getData\\/[0-9]{4}\\?clubName=[[A-z[\\-]]+\\+?[A-z]]+&playerName=[[A-z[\\-]]+\\+?[A-z]]+$")) {
+		} else if (requestURI.matches(
+				"\\/getData\\/[0-9]{4}\\?clubName=[[A-záàâãéèêíïóôõöúüçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÜÇÑ[\\-]]+\\+?[A-záàâãéèêíïóôõöúüçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÜÇÑ]]+&playerName=[[A-záàâãéèêíïóôõöúüçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÜÇÑ[\\-]]+\\+?[A-záàâãéèêíïóôõöúüçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÜÇÑ]]+$")) {
 			response = this.getResponse(this.cacheKeyClubAndPlayer).getBytes();
 
 		} else {
@@ -157,22 +172,26 @@ public class RequestHandler implements HttpHandler {
 				MemcachedServer serverAno = this.verificaServerAno(ano, cacheData);
 				if (serverAno != null && serverAno.isActive()) {
 					System.out.println("Servidor encontrado. Buscando...");
-					
+
 					System.out.println("\nO servidor encontrado: ");
 					System.out.printf("\nName: %s", serverAno.getName());
 					System.out.printf("\nLocation: %s", serverAno.getLocation());
 					System.out.printf("\nYear's: %s", serverAno.getYear());
 
 					// serverAno.getLocation() // fazer o request neste servidor
-					String responseReqOtherServer = this.sendGetOtherServer(serverAno.getLocation(), this.ano, this.requestQuery);
+					String responseReqOtherServer = this.sendGetOtherServer(serverAno.getLocation(), this.ano,
+							this.requestQuery);
 
 					if (responseReqOtherServer.equals("-1")) { // se ocorreu qualquer execption retorna como erro
-						System.out.println("Ocorreu uma falha ao realizar a requisição para o outro servidor. Servidor indisponível...");
+						System.out.println(
+								"Ocorreu uma falha ao realizar a requisição para o outro servidor. Servidor indisponível...");
 
-						// se ocorreu falha ao buscar naquele servidor, ele eh desativado na lista de servers-
-						String saveListResponse = this.disableServerListServersCacheJson(cacheData, serverAno.getName());
+						// se ocorreu falha ao buscar naquele servidor, ele eh desativado na lista de
+						// servers-
+						String saveListResponse = this.disableServerListServersCacheJson(cacheData,
+								serverAno.getName());
 						cache.setCacheData(this.cacheKeyListServers, saveListResponse);
-						
+
 						this.responseCode = 417;
 						response = new Erro(1).toString();
 					} else if (responseReqOtherServer.equals("417")) {
@@ -253,20 +272,20 @@ public class RequestHandler implements HttpHandler {
 			return lista.toString();
 		}
 	}
-	
-	private String disableServerListServersCacheJson(String listaServersCache, String serverName) {
-			MemcachedServerList lista = new MemcachedServerList();
-			lista = lista.toObjeto(listaServersCache);
 
-			if (lista.getServers().size() > 0) {
-				for (MemcachedServer itemMemcached : lista.getServers()) {
-					if (itemMemcached.getName().equals(serverName)) {
-						itemMemcached.setActive(false);
-					}
+	private String disableServerListServersCacheJson(String listaServersCache, String serverName) {
+		MemcachedServerList lista = new MemcachedServerList();
+		lista = lista.toObjeto(listaServersCache);
+
+		if (lista.getServers().size() > 0) {
+			for (MemcachedServer itemMemcached : lista.getServers()) {
+				if (itemMemcached.getName().equals(serverName)) {
+					itemMemcached.setActive(false);
 				}
 			}
+		}
 
-			return lista.toString();
+		return lista.toString();
 	}
 
 	private boolean verificaIsServerContemAno(int ano) {
@@ -310,17 +329,21 @@ public class RequestHandler implements HttpHandler {
 			System.out.println(saveListResponse);
 			cache.setCacheData(this.cacheKeyListServers, saveListResponse);
 		} else {
-			System.out.println("Lista de servidores disponível cache - atualizando..."); // atualizar o servidor na lista de servidores do cache
+			System.out.println("Lista de servidores disponível cache - atualizando..."); // atualizar o servidor na
+																							// lista de servidores do
+																							// cache
 			cache.setCacheData(this.cacheKeyListServers, saveListResponse);
 			System.out.println(saveListResponse);
 		}
 	}
 
-	private String sendGetOtherServer(String serverLocation, int ano, String requestQuery) { // HTTP GET request outros servidores
+	private String sendGetOtherServer(String serverLocation, int ano, String requestQuery) { // HTTP GET request outros
+																								// servidores
 		String retResponse = "";
 
 		try {
-			String uri = String.format("http://%s/getData/%d?%s", serverLocation, ano, requestQuery); // ex: http://192.168.0.135/getData/2011?playerName=Lionel+Messi
+			String uri = String.format("http://%s/getData/%d?%s", serverLocation, ano, requestQuery); // ex:
+																										// http://192.168.0.135/getData/2011?playerName=Lionel+Messi
 			System.out.println("sendGet uri => " + uri);
 
 			URL obj = new URL(uri);
@@ -328,9 +351,9 @@ public class RequestHandler implements HttpHandler {
 
 			con.setRequestMethod("GET"); // optional default is GET
 			con.setConnectTimeout(7 * 1000); // 7 segundos timeout
-			
+
 			int responseCode = con.getResponseCode();
-			
+
 			if (responseCode == 417) {
 				con.disconnect();
 				retResponse = "417";
