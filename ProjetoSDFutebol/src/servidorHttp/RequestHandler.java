@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,9 +47,9 @@ public class RequestHandler implements HttpHandler {
 		String requestQuery = exg.getRequestURI().getQuery();
 		byte[] response = null;
 		
-		/*System.out.println("Testando URI SEM URLdecoder: " + requestURI);*/		
-//		requestURI = URLDecoder.decode(requestURI, "UTF-8").replace(" ", "+");		
-		/*System.out.println("Testando URI COM URLdecoder: " + requestURI);*/
+		System.out.println("Testando URI SEM URLdecoder: " + requestURI);		
+		requestURI = URLDecoder.decode(requestURI, "UTF-8").replace(" ", "+");		
+		System.out.println("Testando URI COM URLdecoder: " + requestURI);
 		
 		/*System.out.println("Testando Query SEM URLdecoder: " + requestQuery);*/		
 //		requestQuery = URLDecoder.decode(requestQuery, "UTF-8").replace(" ", "+");		
@@ -342,8 +343,9 @@ public class RequestHandler implements HttpHandler {
 		String retResponse = "";
 
 		try {
-			String uri = String.format("http://%s/getData/%d?%s", serverLocation, ano, requestQuery); // ex:
-																										// http://192.168.0.135/getData/2011?playerName=Lionel+Messi
+			String uri = String.format("http://%s/getData/%d?%s", serverLocation, ano, URLEncoder.encode(requestQuery, "UTF-8")); // ex:
+																					// http://192.168.0.135/getData/2011?playerName=Lionel+Messi
+			//uri = URLEncoder.encode(uri, "UTF-8");
 			System.out.println("sendGet uri => " + uri);
 
 			URL obj = new URL(uri);
