@@ -27,8 +27,11 @@ public class MemcachedServerList {
 	
 	public boolean updateServer(MemcachedServer server) {
 		for (MemcachedServer memcachedServer : this.servers) {
-			if (memcachedServer.getName() == server.getName()) {
-				memcachedServer = server;
+			if (memcachedServer.getName().equals(server.getName())) {
+				memcachedServer.setLocation(server.getLocation());
+				memcachedServer.setYear(server.getYear());
+				memcachedServer.setActive(server.isActive());
+				
 				return true;
 			}
 		}
