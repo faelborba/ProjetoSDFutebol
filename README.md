@@ -64,4 +64,11 @@ E mydatabase está como "TrabalhoG2", caso tenha nomeado de outra forma no ítem
 O userName está "root" e você deve definir com o nome de usuário que usa para acessar o mysql.<br>
 O Password está sem senha, mas caso utilize algum você deve preenxer conforme a senha definida para seu usuário Mysql.<br>
 
-Fim!
+Após todos os procedimentos de configuração acima você pode Startar o server em seu Eclipse.<br>
+Para isso abra o arquivo SimpleHttpServer.java e execute o projeto.<br>
+Caminho para o arquivo:<br>
+ProjetoSDFutebol/ProjetoSDFutebol/src/servidorHttp/SimpleHttpServer.java<br>
+
+Finalmente você pode ir até seu navegador e digitar suas requisições conforme necessário.<br>
+
+Fim!<br>
