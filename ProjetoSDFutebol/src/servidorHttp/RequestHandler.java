@@ -175,6 +175,9 @@ public class RequestHandler implements HttpHandler {
 						
 						this.responseCode = 417;
 						response = new Erro(1).toString();
+					} else if (responseReqOtherServer.equals("417")) {
+						this.responseCode = 417;
+						response = new Erro(2).toString();
 					} else {
 						if (responseReqOtherServer.contains("wins") || responseReqOtherServer.contains("losses")) {
 							// converter o resultado como o padrão
@@ -327,6 +330,12 @@ public class RequestHandler implements HttpHandler {
 			con.setConnectTimeout(7 * 1000); // 7 segundos timeout
 			
 			int responseCode = con.getResponseCode();
+			
+			if (responseCode == 417) {
+				con.disconnect();
+				retResponse = "417";
+				return retResponse;
+			}
 			System.out.println("\nSending 'GET' request to URL : " + uri);
 			System.out.println("Response Code : " + responseCode);
 
