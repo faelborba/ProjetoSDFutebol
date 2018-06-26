@@ -4,14 +4,16 @@ O projeto tem como objetivo criar um sistema de banco de dados distribuido entre
 Os autores são:<br>
 Bruno Cunha, Eric Quadros e Rafael Borba<br>
 
-Foi usada as seguintes tecnologias para desenvolver o projeto:<br>
--Java com JDK 8 ou superior.<br>
--Banco de dados MySQL.<br>
--E serviço de Memcached.<br>
+Estão sendo usadas as seguintes tecnologias para desenvolver o projeto:<br>
+- Java com JDK 8 ou superior.<br>
+- Banco de dados MySQL.<br>
+- E serviço de Memcached.<br>
 Abaixo Segue o Manual para configuração do ambiente de testes.<br>
 
 <h1>Manual de configuração do ambiente de testes.</h1>
-É necessário ter instalado em sua máquina a ferramenta de desenvolvimento Eclipse, para compilação e execução do servidor.<br>
+Utilizou-se a ferramenta de desenvolvimento Eclipse, para compilação, testes e execução do servidor.<br>
+Recomenda-se a utilização dessa, pois é mais garantido que funcione com essa, mas você pode tentar outras ferramentas de desenvolvimento em java de sua preferência.<br>
+
 Para começar é necessários importar o projeto inteiro em seu Eclipse, todas as bibliotecas java necessárias já estão inclusas nele.<br>
 O arquivo de configuração do servidor está no caminho abaixo, arquivo em json:<br>
 . ProjetoSDFutebol/config/config.json<br>
@@ -62,7 +64,7 @@ Conteúdo do arquivo em json:<br>
 Onde serverName está definido como "localhost" e você deve definir com o seu endereço do mysql.<br>
 E mydatabase está como "TrabalhoG2", caso tenha nomeado de outra forma no ítem 4 você deve alterar aqui também.<br>
 O userName está "root" e você deve definir com o nome de usuário que usa para acessar o mysql.<br>
-O Password está sem senha, mas caso utilize algum você deve preenxer conforme a senha definida para seu usuário Mysql.<br>
+O Password está sem senha, mas caso utilize algum você deve preencher conforme a senha definida para seu usuário Mysql.<br>
 
 Após todos os procedimentos de configuração acima você pode Startar o server em seu Eclipse.<br>
 Para isso abra o arquivo SimpleHttpServer.java e execute o projeto.<br>
